@@ -32,7 +32,7 @@ resource "random_shuffle" "random_subnet" {
 }
 
 resource "aws_elb" "web" {
-  name = "terraform-example-elb"
+  name = "terraform-example-elb-${terraform.workspace}"
 
   subnets         = data.aws_subnet_ids.all.ids
   security_groups = ["${aws_security_group.allow-ssh.id}"]
@@ -60,7 +60,8 @@ resource "aws_instance" "web" {
   instance_type = "t2.micro"
   ami           = "${lookup(var.aws_amis, var.aws_region)}"
 
-  count = 2
+  count = "${var.QTD_ELB}"
+  #count = 3
 
   subnet_id              = "${random_shuffle.random_subnet.result[0]}"
   vpc_security_group_ids = ["${aws_security_group.allow-ssh.id}"]
@@ -85,6 +86,7 @@ resource "aws_instance" "web" {
   }
 
   tags = {
-    Name = "${format("nginx-%03d", count.index + 1)}"
+    #Name = "${format("nginx-%03d", count.index + 1)}"
+    Name = "${format("nginx-%s-%03d", terraform.workspace,count.index + 1)}"
   }
 }

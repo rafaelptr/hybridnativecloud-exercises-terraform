@@ -21,3 +21,6 @@ variable "PATH_TO_KEY" {
 variable "INSTANCE_USERNAME" {
   default = "ubuntu"
 }
+variable "QTD_ELB" {
+  default = "1"
+}
